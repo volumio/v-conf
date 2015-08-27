@@ -1,9 +1,17 @@
 /**
  * Created by massi on 27/07/15.
  */
-var config=new (require(__dirname+'/config.js'))();
+var config=new (require(__dirname+'/index.js'))();
 
 config.loadFile(__dirname+'/testConfig.json');
+
+console.log("KEYS: "+config.getKeys('keys'));
+
+var keys=config.getKeys('keys.fifth');
+console.log("KEYS: "+keys);
+
+for( var i in keys)
+    console.log(keys[i]);
 
 console.log("VALUE "+config.get('debug'));
 console.log("VALUE "+config.get('env'));

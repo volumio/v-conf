@@ -1,8 +1,7 @@
 /**
- * Created by massi on 27/07/15.
+ * Created by Massimiliano Fanciulli on 27/07/15.
  */
 var fs=require('fs-extra');
-
 
 module.exports=Config;
 
@@ -29,7 +28,7 @@ Config.prototype.loadFile=function(file)
     catch(ex)
     {
         self.data={};
-        console.log('[' + Date.now() + '] Error reading configuration. Defaulting to empty conifguration');
+        console.log('Error reading configuration. Defaulting to empty configuration');
     }
 
 }
@@ -171,9 +170,13 @@ Config.prototype.delete=function(key)
     delete self.data[key];
 }
 
-Config.prototype.getKeys=function()
+Config.prototype.getKeys=function(parentKey)
 {
     var self=this;
 
-    return Object.keys(self.data);
+    var parent=self.findProp(parentKey);
+
+    if(parent!=undefined && parent!=null)
+        return Object.keys(parent);
+    else return Object.keys(self.data);
 }
