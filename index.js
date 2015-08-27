@@ -36,22 +36,28 @@ Config.prototype.loadFile=function(file)
 Config.prototype.findProp=function(key)
 {
     var self=this;
-    var splitted=key.split('.');
-    var currentProp=self.data;
 
-    while (splitted.length > 0) {
-        var k = splitted.shift();
+    if(key==undefined)
+        return self.data;
+    else
+    {
+        var splitted=key.split('.');
+        var currentProp=self.data;
 
-        if(currentProp && currentProp[k]!=undefined)
-            currentProp=currentProp[k];
-        else
-        {
-            currentProp=null;
-            break;
+        while (splitted.length > 0) {
+            var k = splitted.shift();
+
+            if(currentProp && currentProp[k]!=undefined)
+                currentProp=currentProp[k];
+            else
+            {
+                currentProp=null;
+                break;
+            }
         }
-    }
 
-    return currentProp;
+        return currentProp;
+    }
 }
 
 Config.prototype.get=function(key)

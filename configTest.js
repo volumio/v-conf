@@ -5,6 +5,7 @@ var config=new (require(__dirname+'/index.js'))();
 
 config.loadFile(__dirname+'/testConfig.json');
 
+console.log("KEYS: "+config.getKeys());
 console.log("KEYS: "+config.getKeys('keys'));
 
 var keys=config.getKeys('keys.fifth');
