@@ -1,5 +1,6 @@
 /**
  * Created by Massimiliano Fanciulli on 27/07/15.
+ * If you need any information write me at fanciulli@gmail.com
  */
 var fs=require('fs-extra');
 
