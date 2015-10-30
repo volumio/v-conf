@@ -16,6 +16,11 @@ function Config()
     self.data={};
 }
 
+
+/**
+ *
+ * @param file
+ */
 Config.prototype.loadFile=function(file)
 {
     var self=this;
@@ -34,6 +39,11 @@ Config.prototype.loadFile=function(file)
 
 }
 
+/**
+ *
+ * @param key
+ * @returns {{}|*}
+ */
 Config.prototype.findProp=function(key)
 {
     var self=this;
@@ -60,6 +70,24 @@ Config.prototype.findProp=function(key)
         return currentProp;
     }
 }
+
+/**
+ * This method returns true or false depending on the existence of a key in the configuration file
+ * @param key Key to check
+ * @returns {boolean} True if key exists, false otherwise
+ */
+Config.prototype.has=function(key)
+{
+    var self=this;
+
+    return self.findProp(key)!=null;
+}
+
+
+
+
+
+
 
 Config.prototype.get=function(key)
 {

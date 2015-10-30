@@ -35,3 +35,6 @@ console.log("VALUE "+config.get('music_services.dirble.enabled'));
 config.addConfigValue('music_services.dirble.enabled','boolean',false);
 console.log("VALUE "+config.get('music_services.dirble.enabled'));
 
+
+console.log("THIS VALUE SHALL BE FALSE: "+config.has('not.existing.key'));
+

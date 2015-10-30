@@ -139,6 +139,18 @@ Example:
 
     config.delete('groupa.configuration');
     
+####has(key)
+
+This method checks the existence of a key
+
+* key:   the key to check
+
+Returns eturns true or false depending on the existence of a key in the configuration file
+
+Example:
+
+    var exists=config.has('groupa.configuration');    
+    
 ####getKeys(key)
 
 Lists all the children keys of the specified one.
