@@ -52,5 +52,13 @@
         "value": false
       }
     }
+  },
+  "delete": {
+    "fifth": {
+      "sub-key-2": {
+        "type": "boolean",
+        "value": false
+      }
+    }
   }
 }

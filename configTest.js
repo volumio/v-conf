@@ -37,4 +37,8 @@ console.log("VALUE "+config.get('music_services.dirble.enabled'));
 
 
 console.log("THIS VALUE SHALL BE FALSE: "+config.has('not.existing.key'));
+config.delete('delete.fifth.sub-key-1');
+console.log("VALUE "+config.get('delete.fifth.sub-key-2'));
+
+config.print();
 

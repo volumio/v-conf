@@ -197,12 +197,33 @@ Config.prototype.print=function()
     console.log(JSON.stringify(self.data));
 }
 
-//Only works with root key. TODO: fix
+/**
+ * This method searches for the key and deletes it
+ * @param key
+ */
 Config.prototype.delete=function(key)
 {
     var self=this;
 
-    delete self.data[key];
+    if(self.has(key))
+    {
+        var splitted=key.split('.');
+
+        if(splitted.length==1)
+            delete self.data[key];
+        else
+        {
+            var parentKey=self.data;
+            for(var i=0;i< splitted.length;i++)
+            {
+                var k = splitted.shift();
+                parentKey=parentKey[k];
+            }
+
+            var nextKey=splitted.shift();
+            delete parentKey[nextKey];
+        }
+    }
 }
 
 Config.prototype.getKeys=function(parentKey)
