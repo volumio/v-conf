@@ -223,6 +223,8 @@ Config.prototype.delete=function(key)
             var nextKey=splitted.shift();
             delete parentKey[nextKey];
         }
+
+        self.scheduleSave();
     }
 }
 
