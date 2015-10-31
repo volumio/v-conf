@@ -15,13 +15,13 @@ The idea behind v-conf is to provide an easy way to manage configuration paramet
 
 ##Installation
 
-To install it include the library in your package.json as follows
+To install it include the library in your package.json as follows (replacing VERSION with latest version number)
 
     {
         "name": "test",
         "version": "1",
         "dependencies": {
-            "v-conf": "0.0.2"
+            "v-conf": "VERSION"
         }
     }
 
