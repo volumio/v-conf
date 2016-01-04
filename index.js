@@ -3,6 +3,7 @@
  * If you need any information write me at fanciulli@gmail.com
  */
 var fs=require('fs-extra');
+var Multimap = require('multimap');
 
 module.exports=Config;
 
@@ -14,6 +15,8 @@ function Config()
     self.autosaveDelay=1000;
     self.saved=true;
     self.data={};
+
+    self.callbacks=new Multimap();
 }
 
 
@@ -84,11 +87,6 @@ Config.prototype.has=function(key)
 }
 
 
-
-
-
-
-
 Config.prototype.get=function(key)
 {
     var self=this;
@@ -108,6 +106,13 @@ Config.prototype.set=function(key,value)
         prop.value=self.forceToType(prop.type,value);
         self.scheduleSave();
     }
+
+    self.callbacks.forEach(function (callback, ckey) {
+        if(key==ckey)
+        {
+            callback(value);
+        }
+    });
 
 }
 
@@ -226,6 +231,8 @@ Config.prototype.delete=function(key)
 
         self.scheduleSave();
     }
+
+    self.callbacks.delete(key);
 }
 
 Config.prototype.getKeys=function(parentKey)
@@ -237,4 +244,11 @@ Config.prototype.getKeys=function(parentKey)
     if(parent!=undefined && parent!=null)
         return Object.keys(parent);
     else return Object.keys(self.data);
+}
+
+Config.prototype.registerCallback=function(key,callback)
+{
+    var self=this;
+
+    self.callbacks.set(key,callback);
 }

@@ -1,4 +1,14 @@
 {
+  "callback": {
+    "b": {
+      "type": "string",
+      "value": "BBB"
+    },
+    "a": {
+      "type": "string",
+      "value": "########"
+    }
+  },
   "debug": {
     "type": "boolean",
     "value": true

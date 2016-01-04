@@ -42,3 +42,39 @@ console.log("VALUE "+config.get('delete.fifth.sub-key-2'));
 
 config.print();
 
+
+
+
+
+config.registerCallback('callback.a',function(value)
+{
+    console.log("This is callabck A #1. New value is "+value);
+});
+
+config.registerCallback('callback.b',function(value)
+{
+    console.log("This is callabck B. New value is "+value);
+});
+
+
+config.set('callback.a','New value');
+
+config.registerCallback('callback.a',function(value)
+{
+    console.log("This is callabck A #2. New value is "+value);
+});
+config.set('callback.a','Asganau');
+
+config.delete('callback.a');
+config.addConfigValue('callback.a','string',"PIPPO");
+config.set('callback.a','AAAA');
+config.print();
+
+config.registerCallback('callback.a',function(value)
+{
+    console.log("You should see only this callback. Value: "+value);
+});
+config.set('callback.a','########');
+config.print();
+
+config.set('callback.b','BBB');

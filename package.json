@@ -1,6 +1,6 @@
 {
   "name": "v-conf",
-  "version": "0.3.1",
+  "version": "0.8.0",
   "description": "A useful library for handling configuration parameters",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,7 @@
     "url": "https://github.com/fanciulli/v-conf/issues"
   },
   "dependencies": {
-    "fs-extra": "0.23.1"
+    "fs-extra": "0.23.1",
+    "multimap": "1.0.1"
   }
 }
