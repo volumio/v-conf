@@ -2,8 +2,19 @@
  * Created by massi on 27/07/15.
  */
 var config=new (require(__dirname+'/index.js'))();
+var configB=new (require(__dirname+'/index.js'))();
+
 
 config.loadFile(__dirname+'/testConfig.json');
+
+console.log(config.get("callback.b"));
+config.set("callback.b","ACCITUA");
+config.save();
+configB.loadFile(__dirname+'/testConfig.json');
+console.log("THIS SHOULD BE DIFFERENT FROM BBB   "+config.get("callback.b"));
+console.log("THIS SHOULD BE DIFFERENT FROM BBB   "+configB.get("callback.b"));
+
+
 
 console.log("KEYS: "+config.getKeys());
 console.log("KEYS: "+config.getKeys('keys'));

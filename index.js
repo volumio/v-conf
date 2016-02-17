@@ -126,15 +126,21 @@ Config.prototype.scheduleSave=function()
 
         setTimeout(function()
         {
-            if(self.saved==false)
-            {
-                self.saved=true;
-                fs.writeJsonSync(self.filePath,self.data);
-            }
-
+            self.save();
         },self.autosaveDelay);
     }
 
+}
+
+Config.prototype.save=function()
+{
+    var self=this;
+
+    if(self.saved==false)
+    {
+        self.saved=true;
+        fs.writeJsonSync(self.filePath,self.data);
+    }
 }
 
 Config.prototype.addConfigValue=function(key,type,value)
