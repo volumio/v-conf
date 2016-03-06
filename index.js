@@ -40,7 +40,7 @@ Config.prototype.loadFile=function(file)
         console.log('Error reading configuration. Defaulting to empty configuration');
     }
 
-}
+};
 
 /**
  *
@@ -51,7 +51,7 @@ Config.prototype.findProp=function(key)
 {
     var self=this;
 
-    if(key==undefined)
+    if(key===undefined)
         return self.data;
     else
     {
@@ -61,7 +61,7 @@ Config.prototype.findProp=function(key)
         while (splitted.length > 0) {
             var k = splitted.shift();
 
-            if(currentProp && currentProp[k]!=undefined)
+            if(currentProp && currentProp[k]!==undefined)
                 currentProp=currentProp[k];
             else
             {
@@ -72,7 +72,7 @@ Config.prototype.findProp=function(key)
 
         return currentProp;
     }
-}
+};
 
 /**
  * This method returns true or false depending on the existence of a key in the configuration file
@@ -83,8 +83,8 @@ Config.prototype.has=function(key)
 {
     var self=this;
 
-    return self.findProp(key)!=null;
-}
+    return self.findProp(key)!==null;
+};
 
 
 Config.prototype.get=function(key)
@@ -92,16 +92,16 @@ Config.prototype.get=function(key)
     var self=this;
     var prop=self.findProp(key);
 
-    if(prop!=undefined)
+    if(prop!==undefined)
         return self.forceToType(prop.type,prop.value);
-}
+};
 
 Config.prototype.set=function(key,value)
 {
     var self=this;
     var prop=self.findProp(key);
 
-    if(prop!=undefined)
+    if(prop!==undefined)
     {
         prop.value=self.forceToType(prop.type,value);
         self.scheduleSave();
@@ -114,13 +114,13 @@ Config.prototype.set=function(key,value)
         }
     });
 
-}
+};
 
 Config.prototype.scheduleSave=function()
 {
     var self=this;
 
-    if(self.filePath!=undefined)
+    if(self.filePath!==undefined)
     {
         self.saved=false;
 
@@ -130,18 +130,18 @@ Config.prototype.scheduleSave=function()
         },self.autosaveDelay);
     }
 
-}
+};
 
 Config.prototype.save=function()
 {
     var self=this;
 
-    if(self.saved==false)
+    if(self.saved===false)
     {
         self.saved=true;
         fs.writeJsonSync(self.filePath,self.data);
     }
-}
+};
 
 Config.prototype.addConfigValue=function(key,type,value)
 {
@@ -153,7 +153,7 @@ Config.prototype.addConfigValue=function(key,type,value)
     while (splitted.length > 0) {
         var k = splitted.shift();
 
-        if(currentProp && currentProp[k]!=undefined)
+        if(currentProp && currentProp[k]!==undefined)
             currentProp=currentProp[k];
         else
         {
@@ -164,13 +164,13 @@ Config.prototype.addConfigValue=function(key,type,value)
 
     var prop=self.findProp(key);
     self.assertSupportedType(type);
-    prop['type']=type;
+    prop.type=type;
 
 
-    prop['value']=self.forceToType(type,value);
+    prop.value=self.forceToType(type,value);
 
     self.scheduleSave();
-}
+};
 
 Config.prototype.assertSupportedType=function(type)
 {
@@ -178,7 +178,7 @@ Config.prototype.assertSupportedType=function(type)
     {
         throw Error('Type '+type+' is not supported');
     }
-}
+};
 
 Config.prototype.forceToType=function(type,value)
 {
@@ -199,14 +199,14 @@ Config.prototype.forceToType=function(type,value)
     }
     else return value;
 
-}
+};
 
 Config.prototype.print=function()
 {
     var self=this;
 
     console.log(JSON.stringify(self.data));
-}
+};
 
 /**
  * This method searches for the key and deletes it
@@ -239,7 +239,7 @@ Config.prototype.delete=function(key)
     }
 
     self.callbacks.delete(key);
-}
+};
 
 Config.prototype.getKeys=function(parentKey)
 {
@@ -247,14 +247,14 @@ Config.prototype.getKeys=function(parentKey)
 
     var parent=self.findProp(parentKey);
 
-    if(parent!=undefined && parent!=null)
+    if(parent!==undefined && parent!==null)
         return Object.keys(parent);
     else return Object.keys(self.data);
-}
+};
 
 Config.prototype.registerCallback=function(key,callback)
 {
     var self=this;
 
     self.callbacks.set(key,callback);
-}
+};
