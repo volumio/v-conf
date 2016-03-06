@@ -1,3 +1,5 @@
+[![bitHound Overall Score](https://www.bithound.io/github/fanciulli/v-conf/badges/score.svg)](https://www.bithound.io/github/fanciulli/v-conf)  [![bitHound Dependencies](https://www.bithound.io/github/fanciulli/v-conf/badges/dependencies.svg)](https://www.bithound.io/github/fanciulli/v-conf/master/dependencies/npm)
+
 # v-conf
 An easy to use library for managing configuration parameters. V-conf was born inside the [Volumio](http://volumio.org 'The volumio project website') project
 and then has been migrated to a separate library. 
