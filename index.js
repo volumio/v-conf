@@ -87,13 +87,14 @@ Config.prototype.has=function(key)
 };
 
 
-Config.prototype.get=function(key)
+Config.prototype.get=function(key,def)
 {
     var self=this;
     var prop=self.findProp(key);
 
-    if(prop!==undefined)
+    if(prop!==undefined && prop !== null)
         return self.forceToType(prop.type,prop.value);
+    else return def;
 };
 
 Config.prototype.set=function(key,value)
@@ -101,10 +102,15 @@ Config.prototype.set=function(key,value)
     var self=this;
     var prop=self.findProp(key);
 
-    if(prop!==undefined)
+    if(prop!==undefined && prop !== null)
     {
         prop.value=self.forceToType(prop.type,value);
         self.scheduleSave();
+    }
+    else if(value!==undefined && value!==null)
+    {
+        var type=typeof value;
+        self.addConfigValue(key,type,value);
     }
 
     self.callbacks.forEach(function (callback, ckey) {
