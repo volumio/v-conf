@@ -21,7 +21,7 @@
     "url": "https://github.com/fanciulli/v-conf/issues"
   },
   "dependencies": {
-    "fs-extra": "^0.26.5",
-    "multimap": "1.0.1"
+    "fs-extra": "0.30.0",
+    "multimap": "1.0.2"
   }
 }

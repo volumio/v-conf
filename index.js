@@ -88,6 +88,12 @@ Config.prototype.has=function(key)
 };
 
 
+/**
+ * This method returns the object associated to the key
+ * @param key Object to return
+ * @param def Default value if key is not found
+ * @returns The value associated to key, default if not found and passed to method, undefined otherwise.
+ */
 Config.prototype.get=function(key,def)
 {
     var self=this;
@@ -99,6 +105,11 @@ Config.prototype.get=function(key,def)
     else return def;
 };
 
+/**
+ *
+ * @param key
+ * @param value
+ */
 Config.prototype.set=function(key,value)
 {
     var self=this;
