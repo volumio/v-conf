@@ -21,8 +21,9 @@ function Config()
 
 
 /**
- *
- * @param file
+ * This method loads the configuration from a file. If the file is not found or cannot be opened for some reason,
+ * the content is set to empty
+ * @param file The path of the configuration file to load.
  */
 Config.prototype.loadFile=function(file)
 {
@@ -37,15 +38,15 @@ Config.prototype.loadFile=function(file)
     catch(ex)
     {
         self.data={};
-        console.log('Error reading configuration. Defaulting to empty configuration');
     }
 
 };
 
 /**
- *
- * @param key
- * @returns {{}|*}
+ * This method searches the object associated to the provided key.
+ * @param key Key to search. A string object
+ * @returns The value associate to the key. If not key is given the whole configuration is
+ * returned. If key doesn't exist a null value is returned
  */
 Config.prototype.findProp=function(key)
 {
@@ -55,11 +56,11 @@ Config.prototype.findProp=function(key)
         return self.data;
     else
     {
-        var splitted=key.split('.');
+        var splitItems=key.split('.');
         var currentProp=self.data;
 
-        while (splitted.length > 0) {
-            var k = splitted.shift();
+        while (splitItems.length > 0) {
+            var k = splitItems.shift();
 
             if(currentProp && currentProp[k]!==undefined)
                 currentProp=currentProp[k];
@@ -92,7 +93,8 @@ Config.prototype.get=function(key,def)
     var self=this;
     var prop=self.findProp(key);
 
-    if(prop!==undefined && prop !== null)
+    if(prop!==undefined && prop
+        !== null)
         return self.forceToType(prop.type,prop.value);
     else return def;
 };
