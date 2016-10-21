@@ -19,9 +19,9 @@ var loadObj={
 /**
  * FIND PROP
  */
-describe("FindProp method", function() {
+describe("#findProp()", function() {
 
-    it("FindProp returns the correct object", function(){
+    it("findProp returns the correct object", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
 
         vconf.loadFile(__dirname+'/files/load.json');
@@ -33,7 +33,7 @@ describe("FindProp method", function() {
         });
     });
 
-    it("FindProp returns the whole dataset", function(){
+    it("findProp returns the whole dataset", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
 
         vconf.loadFile(__dirname+'/files/load.json');
@@ -42,7 +42,7 @@ describe("FindProp method", function() {
         expect(b).to.deep.equal(loadObj);
     });
 
-    it("FindProp returns null if key is not in configuration", function(){
+    it("findProp returns null if key is not in configuration", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
 
         vconf.loadFile(__dirname+'/files/load.json');
@@ -57,7 +57,7 @@ describe("FindProp method", function() {
 /**
  * HAS
  */
-describe("Has method", function() {
+describe("#has()", function() {
 
     it("Method correctly returns if key is present", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
@@ -76,7 +76,7 @@ describe("Has method", function() {
 /**
  * GET
  */
-describe("Get method", function() {
+describe("#get()", function() {
 
     it("Key found", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
@@ -119,7 +119,7 @@ describe("Get method", function() {
 /**
  * SET
  */
-describe("Set method", function() {
+describe("#set()", function() {
 
     it("Setting values", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
