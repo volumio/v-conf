@@ -1,7 +1,30 @@
 var expect = require("chai").expect;
 var fs=require('fs-extra');
+var loadObj={
+  load: {
+    a: {
+      type: "number",
+      value: 100
+    },
+    b: {
+      type: "string",
+      value: "A String"
+    },
+    c: {
+      type: "boolean",
+      value: false
+    }
+  }
+};
 
 describe("#loadFile()", function() {
+    beforeEach(function() {
+    	fs.writeJsonSync("/tmp/loadFile.json",loadObj);
+	var fileExists=fs.existsSync("/tmp/loadFile.json");
+	expect(fileExists).to.equal( true );
+    });
+
+
     it("File to load not found", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
 
@@ -15,7 +38,7 @@ describe("#loadFile()", function() {
     it("File successfully read", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
 
-        vconf.loadFile(__dirname+'/files/load.json');
+        vconf.loadFile('/tmp/loadFile.json');
 
         expect(vconf.data).to.deep.equal({
             load: {
@@ -33,7 +56,7 @@ describe("#loadFile()", function() {
                 }
             }
         });
-        expect(vconf.filePath).to.equal(__dirname+'/files/load.json');
+        expect(vconf.filePath).to.equal('/tmp/loadFile.json');
 
     });
 });
