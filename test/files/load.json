@@ -1,12 +1,12 @@
 {
   "load": {
-    "b": {
-      "type": "string",
-      "value": "A String"
-    },
     "a": {
       "type": "number",
       "value": 100
+    },
+    "b": {
+      "type": "string",
+      "value": "A String"
     },
     "c": {
       "type": "boolean",

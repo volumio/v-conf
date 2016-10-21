@@ -117,28 +117,72 @@ describe("Get method", function() {
 });
 
 /**
- * GET
+ * SET
  */
 describe("Set method", function() {
 
-    it("Adding keys", function(){
+    it("Setting values", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
+	vconf.loadFile(__dirname+'/files/load.json');
 
-        vconf.set('load.a',100);
-        vconf.set('load.b',"A value");
+	var a=vconf.get('load.a');
+        var b=vconf.get('load.b');
+        var c=vconf.get('load.c');
+
+	expect(a).to.equal( 100 );
+
+        expect(b).to.equal( "A String" );
+
+        expect(c).to.equal( false );
+
+        vconf.set('load.a',50);
+        vconf.set('load.b',"Updated string");
         vconf.set('load.c',true);
 
         expect(vconf.data.load.a).to.deep.equal( {
             type: "number",
-            value: 100
+            value: 50
         } );
 
         expect(vconf.data.load.b).to.deep.equal( {
             type: "string",
-            value: "A value"
+            value: "Updated string"
         } );
 
         expect(vconf.data.load.c).to.deep.equal( {
+            type: "boolean",
+            value: true
+        } );
+    });
+
+    it("Adding keys", function(){
+        var vconf=new (require(__dirname+'/../index.js'))();
+
+	var d=vconf.get('load.d');
+        var e=vconf.set('load.e');
+        var f=vconf.set('load.f');
+	expect(d).to.equal( undefined );
+
+        expect(e).to.equal( undefined );
+
+        expect(f).to.equal( undefined );
+
+
+        vconf.set('load.d',100);
+        vconf.set('load.e',"A value");
+        vconf.set('load.f',true);
+
+        expect(vconf.data.load.d).to.deep.equal( {
+            type: "number",
+            value: 100
+        } );
+
+        expect(vconf.data.load.e).to.deep.equal( {
+            type: "string",
+            value: "A value"
+        } );
+
+        expect(vconf.data.load.f).to.deep.equal( {
             type: "boolean",
             value: true
         } );
