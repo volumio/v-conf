@@ -106,9 +106,9 @@ Config.prototype.get=function(key,def)
 };
 
 /**
- *
- * @param key
- * @param value
+ * This method sets the provided value to the key.
+ * @param key Key to update
+ * @param value The value to set
  */
 Config.prototype.set=function(key,value)
 {
@@ -135,6 +135,9 @@ Config.prototype.set=function(key,value)
 
 };
 
+/**
+ * This method schedules saving the internal data to disk. Dump to disk is done if a file path is set.
+ */
 Config.prototype.scheduleSave=function()
 {
     var self=this;
@@ -151,6 +154,9 @@ Config.prototype.scheduleSave=function()
 
 };
 
+/**
+ * This method saves the data to disk.
+ */
 Config.prototype.save=function()
 {
     var self=this;
@@ -162,6 +168,12 @@ Config.prototype.save=function()
     }
 };
 
+/**
+ * This method add a configuration to the internal data.
+ * @param key Key to add
+ * @param type Type of the parameter to add
+ * @param value The value of the parameter to add
+ */
 Config.prototype.addConfigValue=function(key,type,value)
 {
     var self=this;
@@ -191,6 +203,10 @@ Config.prototype.addConfigValue=function(key,type,value)
     self.scheduleSave();
 };
 
+/**
+ * This method checks if the type passed as parameter is supported by the library
+ * @param type type to check
+ */
 Config.prototype.assertSupportedType=function(type)
 {
     if(type != 'string' && type!='boolean' && type!='number' && type!='array')
@@ -199,6 +215,11 @@ Config.prototype.assertSupportedType=function(type)
     }
 };
 
+/**
+ * This method forces the value passed
+ * @param key type to force value to
+ * @param value The value to be forced
+ */
 Config.prototype.forceToType=function(type,value)
 {
     if(type=='string')
@@ -220,6 +241,9 @@ Config.prototype.forceToType=function(type,value)
 
 };
 
+/**
+ * This method prints the internal data to console
+ */
 Config.prototype.print=function()
 {
     var self=this;
@@ -260,6 +284,10 @@ Config.prototype.delete=function(key)
     self.callbacks.delete(key);
 };
 
+/**
+ * This method returns all the keys children to the one apssed a parameter
+ * @param key key to evaluate
+ */
 Config.prototype.getKeys=function(parentKey)
 {
     var self=this;
@@ -271,6 +299,11 @@ Config.prototype.getKeys=function(parentKey)
     else return Object.keys(self.data);
 };
 
+/**
+ * This method registers callbacks for set and delete
+ * @param key Key to associate callback to
+ * @param value The callback method to run
+ */
 Config.prototype.registerCallback=function(key,callback)
 {
     var self=this;
