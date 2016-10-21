@@ -1,6 +1,6 @@
 {
   "name": "v-conf",
-  "version": "0.11.0",
+  "version": "1.0.0",
   "description": "A useful library for handling configuration parameters",
   "main": "index.js",
   "scripts": {
