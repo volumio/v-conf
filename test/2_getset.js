@@ -307,3 +307,35 @@ describe("#addConfigValue()", function() {
    
 
 });
+
+/**
+ * GET KEYS
+ */
+describe("#getKeys()", function() {
+    beforeEach(function() {
+    	fs.writeJsonSync("/tmp/getKeys.json",loadObj);
+	var fileExists=fs.existsSync("/tmp/getKeys.json");
+	expect(fileExists).to.equal( true );
+    });
+
+    it("No key", function(){
+        var vconf=new (require(__dirname+'/../index.js'))();
+
+        vconf.loadFile('/tmp/getKeys.json');
+        var keys=vconf.getKeys();
+
+        expect(keys).to.deep.equal( ['load'] );
+    });
+
+    it("With key", function(){
+        var vconf=new (require(__dirname+'/../index.js'))();
+
+        vconf.loadFile('/tmp/getKeys.json');
+        var keys=vconf.getKeys('load');
+
+        expect(keys).to.deep.equal( ['a','b','c'] );
+    });
+
+    
+
+});
