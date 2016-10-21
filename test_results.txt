@@ -1,0 +1,34 @@
+
+
+  #loadFile()
+    ✓ File to load not found
+    ✓ File successfully read
+
+  #scheduleSave()
+    ✓ Successful save (5012ms)
+
+  #save()
+    ✓ Data is saved to disk
+    ✓ Data is not saved to disk
+
+  #findProp()
+    ✓ findProp returns the correct object
+    ✓ findProp returns the whole dataset
+    ✓ findProp returns null if key is not in configuration
+
+  #has()
+    ✓ Method correctly returns if key is present
+
+  #get()
+    ✓ Key found
+    ✓ Key found (default provided)
+    ✓ Key not found
+    ✓ Key not found (default provided)
+
+  #set()
+    ✓ Setting values
+    ✓ Adding keys
+
+
+  15 passing (5s)
+
