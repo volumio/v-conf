@@ -6,10 +6,12 @@ and then has been migrated to a separate library.
 
 The idea behind v-conf is to provide an easy way to manage configuration parameters. Main functionalities are:
 
+* Configuration parameters can be organized in a hierarchy
 * Optionally store data on file
-* Configuration is automatically saved after a configurable amount of time
-* Data write is reduced is automatic save has not been done yet
-* Configuration parameters can be organized in a hierarchical structure in order to group them
+* Data is automatically saved after a configurable amount of time
+* Data write is reduced by delaying disk writes
+* Callbacks can be associated to configuration keys.
+
 
 ##Contacts
 
@@ -31,7 +33,7 @@ and then run
 
     npm install
     
-In your package.json pick latest version if you don't need a specific one. The example refers to version 0.0.2.
+In your package.json pick latest version if you don't need a specific one.
 
 If you want to install the library manually run the following command on the root of your project
 
@@ -49,7 +51,8 @@ V-conf needs to be instantiated somewhere in your code.
 
     var config=new (require('v-conf'))();
     
-Then you can decide wether creating your data structure manually or load from disk. A configuration value can be added as follows:
+Then you can decide whether creating your data structure manually or load it from disk. 
+A configuration value can be added as follows:
 
     config.addConfigValue('my.configuration.value','boolean',false);
     
@@ -63,7 +66,7 @@ Raspberry PI)
 
 ###Key structure
 
-As shown by the addConfigValue example above the configuration values are organized in a tree structure. This allows grouping of  data.
+As shown by the addConfigValue example above the configuration values are organized in a tree structure. This allows grouping of data.
 The method addConfigValue automatically creates the missing structures for you.
 
 The following code
@@ -110,7 +113,7 @@ Example:
 
 ####set(key,value)
 
-Updates the value of the key. Does nothing if the key doesn't exists.
+Updates the value of the key. If the key doesn't exists, the method creates it inferring the value type.
 
 * key:   the key of an existing configuration values
 * value: the value to set
@@ -163,3 +166,17 @@ Example:
 
     var keys=config.getKeys('groupa.configuration');
     
+####registerCallback(key, callback)
+
+Register a callback function to be executed when the value is updated
+
+* key:   the key of an existing configuration values that you want to be notified of its value change
+* callback: a callback function that will be invoked when the value is updated. The new value is passed to the function.
+            
+
+Example:
+
+    config.registerCallback('groupa.configuration',function(data)
+                             {
+                                console.log('NEW VALUE: '+data);
+                             });
