@@ -22,10 +22,11 @@ function Config()
 
 /**
  * This method loads the configuration from a file. If the file is not found or cannot be opened for some reason,
- * the content is set to empty
+ * the content is set to empty. The method is synchronous if no callback is provided, asynchronous otherwise
  * @param file The path of the configuration file to load.
+ * @param callback Callback method that is invoked when load is completed. Function shall accept (err,data)
  */
-Config.prototype.loadFile=function(file)
+Config.prototype.loadFile=function(file,callback)
 {
     var self=this;
 
@@ -33,7 +34,20 @@ Config.prototype.loadFile=function(file)
 
     try
     {
-        self.data=fs.readJsonSync(file);
+        if(callback === undefined)
+            self.data=fs.readJsonSync(file);
+        else
+        {
+            fs.readJson(file,function(err,data){
+                if(err)
+                    callback(err);
+                else
+                {
+                    self.data=data;
+                    callback(err,data);
+                }
+            });
+        }
     }
     catch(ex)
     {
