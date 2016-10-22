@@ -24,8 +24,8 @@ var loadObj={
 describe("#findProp()", function() {
     beforeEach(function() {
     	fs.writeJsonSync("/tmp/findProp.json",loadObj);
-	var fileExists=fs.existsSync("/tmp/findProp.json");
-	expect(fileExists).to.equal( true );
+        var fileExists=fs.existsSync("/tmp/findProp.json");
+        expect(fileExists).to.equal( true );
     });
 	
     it("findProp returns the correct object", function(){
@@ -67,8 +67,8 @@ describe("#findProp()", function() {
 describe("#has()", function() {
     beforeEach(function() {
     	fs.writeJsonSync("/tmp/has.json",loadObj);
-	var fileExists=fs.existsSync("/tmp/has.json");
-	expect(fileExists).to.equal( true );
+        var fileExists=fs.existsSync("/tmp/has.json");
+        expect(fileExists).to.equal( true );
     });
 
     it("Method correctly returns if key is present", function(){
@@ -91,8 +91,8 @@ describe("#has()", function() {
 describe("#get()", function() {
     beforeEach(function() {
     	fs.writeJsonSync("/tmp/get.json",loadObj);
-	var fileExists=fs.existsSync("/tmp/get.json");
-	expect(fileExists).to.equal( true );
+        var fileExists=fs.existsSync("/tmp/get.json");
+        expect(fileExists).to.equal( true );
     });
 
     it("Key found", function(){
@@ -139,8 +139,8 @@ describe("#get()", function() {
 describe("#set()", function() {
     beforeEach(function() {
     	fs.writeJsonSync("/tmp/set.json",loadObj);
-	var fileExists=fs.existsSync("/tmp/set.json");
-	expect(fileExists).to.equal( true );
+        var fileExists=fs.existsSync("/tmp/set.json");
+        expect(fileExists).to.equal( true );
     });
 
     it("Setting values", function(){
@@ -180,10 +180,10 @@ describe("#set()", function() {
     it("Adding keys", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
 
-	var d=vconf.get('load.d');
+	    var d=vconf.get('load.d');
         var e=vconf.set('load.e');
         var f=vconf.set('load.f');
-	expect(d).to.equal( undefined );
+	    expect(d).to.equal( undefined );
 
         expect(e).to.equal( undefined );
 
@@ -220,17 +220,17 @@ describe("#set()", function() {
 describe("#addConfigValue()", function() {
     beforeEach(function() {
     	fs.writeJsonSync("/tmp/addConfigValue.json",loadObj);
-	var fileExists=fs.existsSync("/tmp/addConfigValue.json");
-	expect(fileExists).to.equal( true );
+        var fileExists=fs.existsSync("/tmp/addConfigValue.json");
+        expect(fileExists).to.equal( true );
     });
 
     it("Adding a new key (keys not in configuration)", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
-	vconf.loadFile('/tmp/addConfigValue.json');
+        vconf.loadFile('/tmp/addConfigValue.json');
 
-	vconf.addConfigValue('load.d','string', "Another string" );
-	vconf.addConfigValue('load.e','number', 500 );
-	vconf.addConfigValue('load.f','boolean', true );
+        vconf.addConfigValue('load.d','string', "Another string" );
+        vconf.addConfigValue('load.e','number', 500 );
+        vconf.addConfigValue('load.f','boolean', true );
 
         expect(vconf.data.load.a).to.deep.equal( {
             type: "number",
@@ -265,10 +265,10 @@ describe("#addConfigValue()", function() {
 
     it("Adding a new key (keys in configuration)", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
-	vconf.loadFile('/tmp/addConfigValue.json');
+        vconf.loadFile('/tmp/addConfigValue.json');
 
 
-	expect(vconf.data.load.a).to.deep.equal( {
+        expect(vconf.data.load.a).to.deep.equal( {
             type: "number",
             value: 100
         } );
@@ -283,9 +283,9 @@ describe("#addConfigValue()", function() {
             value: false
         } );
 
-	vconf.addConfigValue('load.a','number', 500 );
-	vconf.addConfigValue('load.b','string', "Another string" );
-	vconf.addConfigValue('load.c','boolean', true );
+        vconf.addConfigValue('load.a','number', 500 );
+        vconf.addConfigValue('load.b','string', "Another string" );
+        vconf.addConfigValue('load.c','boolean', true );
 
         expect(vconf.data.load.a).to.deep.equal( {
             type: "number",
@@ -314,8 +314,8 @@ describe("#addConfigValue()", function() {
 describe("#getKeys()", function() {
     beforeEach(function() {
     	fs.writeJsonSync("/tmp/getKeys.json",loadObj);
-	var fileExists=fs.existsSync("/tmp/getKeys.json");
-	expect(fileExists).to.equal( true );
+        var fileExists=fs.existsSync("/tmp/getKeys.json");
+        expect(fileExists).to.equal( true );
     });
 
     it("No key", function(){

@@ -24,8 +24,8 @@ var loadObj={
 describe("#registerCallback()", function() {
     beforeEach(function() {
     	fs.writeJsonSync("/tmp/callbacks.json",loadObj);
-	var fileExists=fs.existsSync("/tmp/callbacks.json");
-	expect(fileExists).to.equal( true );
+        var fileExists=fs.existsSync("/tmp/callbacks.json");
+        expect(fileExists).to.equal( true );
     });
 	
     it("Registering a callback", function(){
