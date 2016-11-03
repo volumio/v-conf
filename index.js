@@ -11,6 +11,7 @@ function Config()
 {
     var self=this;
 
+    self.syncSave=true;
     self.autosave=true;
     self.autosaveDelay=1000;
     self.saved=true;
@@ -76,12 +77,22 @@ Config.prototype.findProp=function(key)
         while (splitItems.length > 0) {
             var k = splitItems.shift();
 
-            if(currentProp && currentProp[k]!==undefined)
-                currentProp=currentProp[k];
+            var beginArrayIndex=k.indexOf('[');
+            var endArrayIndex=k.indexOf(']');
+
+            if(beginArrayIndex>-1 && endArrayIndex>-1)
+            {
+                // shall get an array item
+            }
             else
             {
-                currentProp=null;
-                break;
+                if(currentProp && currentProp[k]!==undefined)
+                    currentProp=currentProp[k];
+                else
+                {
+                    currentProp=null;
+                    break;
+                }
             }
         }
 
@@ -178,7 +189,10 @@ Config.prototype.save=function()
     if(self.saved===false)
     {
         self.saved=true;
-        fs.writeJsonSync(self.filePath,self.data);
+
+        if(self.syncSave)
+            fs.writeJsonSync(self.filePath,self.data);
+        else fs.writeJson(self.filePath,self.data);
     }
 };
 

@@ -98,25 +98,49 @@ describe("#scheduleSave()", function() {
 
 
     it("Successful save", function(done){
-	this.timeout(6000);
-	var vconf=new (require(__dirname+'/../index.js'))();
-	vconf.autosaveDelay=5000;
+        this.timeout(6000);
+        var vconf=new (require(__dirname+'/../index.js'))();
+        vconf.autosaveDelay=5000;
+            vconf.filePath="/tmp/scheduleSave.json";
+
+        expect(vconf.filePath).to.equal( "/tmp/scheduleSave.json" );
+            expect(vconf.autosaveDelay).to.equal( 5000 );
+
+        vconf.scheduleSave();
+
+        var fileExists=fs.existsSync("/tmp/scheduleSave.json");
+        expect(fileExists).to.equal( false );
+
+        setTimeout(function(){
+            var fileExists=fs.existsSync("/tmp/scheduleSave.json");
+            expect(fileExists).to.equal( true );
+            done();
+        },5000);
+	
+    });
+
+
+    it("Successful save (asynchronous)", function(done){
+        this.timeout(7000);
+        var vconf=new (require(__dirname+'/../index.js'))();
+        vconf.syncSave=false;
+        vconf.autosaveDelay=5000;
         vconf.filePath="/tmp/scheduleSave.json";
 
-	expect(vconf.filePath).to.equal( "/tmp/scheduleSave.json" );
+        expect(vconf.filePath).to.equal( "/tmp/scheduleSave.json" );
         expect(vconf.autosaveDelay).to.equal( 5000 );
 
-	vconf.scheduleSave();
-	
-	var fileExists=fs.existsSync("/tmp/scheduleSave.json");
-	expect(fileExists).to.equal( false );
+        vconf.scheduleSave();
 
-	setTimeout(function(){
-		var fileExists=fs.existsSync("/tmp/scheduleSave.json");
-		expect(fileExists).to.equal( true );
-		done();
-	},5000);
-	
+        var fileExists=fs.existsSync("/tmp/scheduleSave.json");
+        expect(fileExists).to.equal( false );
+
+        setTimeout(function(){
+            var fileExists=fs.existsSync("/tmp/scheduleSave.json");
+            expect(fileExists).to.equal( true );
+            done();
+        },6000);
+
     });
 });
 

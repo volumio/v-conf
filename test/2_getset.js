@@ -14,6 +14,20 @@ var loadObj={
     c: {
       type: "boolean",
       value: false
+    },
+    array:
+    {
+        type: "array",
+        value: [
+            {
+                type: "boolean",
+                value: false
+            },
+            {
+                type: "boolean",
+                value: true
+            }
+        ]
     }
   }
 };
@@ -56,6 +70,27 @@ describe("#findProp()", function() {
         var b=vconf.findProp('load.d');
 
         expect(b).to.equal(null);
+    });
+
+    it("findProp returns an item from an array", function(){
+        var vconf=new (require(__dirname+'/../index.js'))();
+
+        vconf.loadFile('/tmp/findProp.json');
+        var array=vconf.findProp('load.array');
+
+        expect(array).to.deep.equal({
+            type: "array",
+            value: [
+                {
+                    type: "boolean",
+                    value: false
+                },
+                {
+                    type: "boolean",
+                    value: true
+                }
+            ]
+        });
     });
 
 });
@@ -333,7 +368,7 @@ describe("#getKeys()", function() {
         vconf.loadFile('/tmp/getKeys.json');
         var keys=vconf.getKeys('load');
 
-        expect(keys).to.deep.equal( ['a','b','c'] );
+        expect(keys).to.deep.equal( ['a','b','c','array'] );
     });
 
     
