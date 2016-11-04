@@ -30,8 +30,8 @@ describe("#loadFile()", function() {
 
         vconf.loadFile('/tmp/missingFile.json');
 
-        expect(vconf.data).to.deep.equal({});
-        expect(vconf.filePath).to.equal('/tmp/missingFile.json');
+        expect(vconf.dataStore.data).to.deep.equal({});
+        expect(vconf.persistence.filePath).to.equal('/tmp/missingFile.json');
 
     });
 
@@ -53,7 +53,7 @@ describe("#loadFile()", function() {
 
         vconf.loadFile('/tmp/loadFile.json');
 
-        expect(vconf.data).to.deep.equal({
+        expect(vconf.dataStore.data).to.deep.equal({
             load: {
                 b: {
                     type: "string",
@@ -69,7 +69,7 @@ describe("#loadFile()", function() {
                 }
             }
         });
-        expect(vconf.filePath).to.equal('/tmp/loadFile.json');
+        expect(vconf.persistence.filePath).to.equal('/tmp/loadFile.json');
 
     });
 
@@ -100,13 +100,13 @@ describe("#scheduleSave()", function() {
     it("Successful save", function(done){
         this.timeout(6000);
         var vconf=new (require(__dirname+'/../index.js'))();
-        vconf.autosaveDelay=5000;
-            vconf.filePath="/tmp/scheduleSave.json";
+        vconf.persistence.autosaveDelay=5000;
+        vconf.persistence.filePath="/tmp/scheduleSave.json";
 
-        expect(vconf.filePath).to.equal( "/tmp/scheduleSave.json" );
-            expect(vconf.autosaveDelay).to.equal( 5000 );
+        expect(vconf.persistence.filePath).to.equal( "/tmp/scheduleSave.json" );
+        expect(vconf.persistence.autosaveDelay).to.equal( 5000 );
 
-        vconf.scheduleSave();
+        vconf.persistence.scheduleSave();
 
         var fileExists=fs.existsSync("/tmp/scheduleSave.json");
         expect(fileExists).to.equal( false );
@@ -123,14 +123,14 @@ describe("#scheduleSave()", function() {
     it("Successful save (asynchronous)", function(done){
         this.timeout(7000);
         var vconf=new (require(__dirname+'/../index.js'))();
-        vconf.syncSave=false;
-        vconf.autosaveDelay=5000;
-        vconf.filePath="/tmp/scheduleSave.json";
+        vconf.persistence.syncSave=false;
+        vconf.persistence.autosaveDelay=5000;
+        vconf.persistence.filePath="/tmp/scheduleSave.json";
 
-        expect(vconf.filePath).to.equal( "/tmp/scheduleSave.json" );
-        expect(vconf.autosaveDelay).to.equal( 5000 );
+        expect(vconf.persistence.filePath).to.equal( "/tmp/scheduleSave.json" );
+        expect(vconf.persistence.autosaveDelay).to.equal( 5000 );
 
-        vconf.scheduleSave();
+        vconf.persistence.scheduleSave();
 
         var fileExists=fs.existsSync("/tmp/scheduleSave.json");
         expect(fileExists).to.equal( false );
@@ -155,16 +155,16 @@ describe("#save()", function() {
 
     it("Data is saved to disk", function(){
 	var vconf=new (require(__dirname+'/../index.js'))();
-	vconf.filePath="/tmp/save.json";
-	vconf.saved=false;
+	vconf.persistence.filePath="/tmp/save.json";
+	vconf.persistence.saved=false;
 
 	var obj = fs.readJsonSync("/tmp/save.json");
 
-	expect(vconf.saved).to.equal( false );
-        expect(vconf.filePath).to.equal( "/tmp/save.json" );
+	expect(vconf.persistence.saved).to.equal( false );
+        expect(vconf.persistence.filePath).to.equal( "/tmp/save.json" );
 	expect(obj).to.deep.equal( {} );
 
-	vconf.data={
+	vconf.dataStore.data={
 		    load: {
 			a: {
 			    type: "number",
@@ -172,7 +172,7 @@ describe("#save()", function() {
 			}
 		    }
 	};
-	vconf.save();
+	vconf.persistence.save();
 	
 	obj = fs.readJsonSync("/tmp/save.json");
 
@@ -188,16 +188,16 @@ describe("#save()", function() {
 
     it("Data is not saved to disk", function(){
 	var vconf=new (require(__dirname+'/../index.js'))();
-	vconf.filePath="/tmp/save.json";
-	vconf.saved=true;
+	vconf.persistence.filePath="/tmp/save.json";
+	vconf.persistence.saved=true;
 
 	var obj = fs.readJsonSync("/tmp/save.json");
 
-	expect(vconf.saved).to.equal( true );
-    expect(vconf.filePath).to.equal( "/tmp/save.json" );
+	expect(vconf.persistence.saved).to.equal( true );
+        expect(vconf.persistence.filePath).to.equal( "/tmp/save.json" );
 	expect(obj).to.deep.equal( {} );
 
-	vconf.data={
+	vconf.dataStore.data={
 		    load: {
 			a: {
 			    type: "number",
@@ -205,7 +205,7 @@ describe("#save()", function() {
 			}
 		    }
 	};
-	vconf.save();
+	vconf.persistence.save();
 	
 	obj = fs.readJsonSync("/tmp/save.json");
 

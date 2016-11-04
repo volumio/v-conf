@@ -10,12 +10,9 @@ module.exports=Config;
 function Config()
 {
     var self=this;
-
-    self.syncSave=true;
-    self.autosave=true;
-    self.autosaveDelay=1000;
-    self.saved=true;
-    self.data={};
+    
+    self.persistence=new (require(__dirname+'/file_persistence.js'))();
+    self.dataStore=new (require(__dirname+'/data_store.js'))(self.persistence);
 
     self.callbacks=new Multimap();
 }
@@ -29,80 +26,20 @@ function Config()
  */
 Config.prototype.loadFile=function(file,callback)
 {
-    var self=this;
-
-    self.filePath=file;
-
-    try
-    {
-        if(callback === undefined)
-            self.data=fs.readJsonSync(file);
-        else
-        {
-            fs.readJson(file,function(err,data){
-                if(err)
-                    callback(err);
-                else
-                {
-                    self.data=data;
-                    callback(err,data);
-                }
-            });
-        }
-    }
-    catch(ex)
-    {
-        self.data={};
-    }
-
+    if(callback === undefined)
+	this.persistence.loadFile(file,this.dataStore);
+    else
+        this.persistence.loadFile(file,this.dataStore,callback);
 };
 
 /**
- * This method searches the object associated to the provided key.
- * @param key Key to search. A string object
- * @returns The value associate to the key. If not key is given the whole configuration is
- * returned. If key doesn't exist a null value is returned
+ * This method saves the data to disk.
  */
-Config.prototype.findProp=function(key)
+Config.prototype.save=function()
 {
-    var self=this;
-
-    if(key===undefined)
-        return self.data;
-    else
-    {
-        var splitItems=key.split('.');
-        var currentProp=self.data;
-
-        while (splitItems.length > 0) {
-            var k = splitItems.shift();
-
-            var beginArrayIndex=k.indexOf('[');
-            var endArrayIndex=k.indexOf(']');
-
-            if(beginArrayIndex>-1 && endArrayIndex>-1)
-            {
-                // shall get an array item
-		var itemStr=k.substring(0,beginArrayIndex);
-		var indexStr=parseInt(k.substring(beginArrayIndex+1,endArrayIndex).trim());
-		currentProp=currentProp[itemStr];
-		currentProp=currentProp.value[indexStr];
-            }
-            else
-            {
-                if(currentProp && currentProp[k]!==undefined)
-                    currentProp=currentProp[k];
-                else
-                {
-                    currentProp=null;
-                    break;
-                }
-            }
-        }
-
-        return currentProp;
-    }
+    this.persistence.save();
 };
+
 
 /**
  * This method returns true or false depending on the existence of a key in the configuration file
@@ -111,12 +48,8 @@ Config.prototype.findProp=function(key)
  */
 Config.prototype.has=function(key)
 {
-    var self=this;
-    var prop=self.findProp(key);
-
-    return prop!==null && prop!==undefined;
+    return this.dataStore.has(key);
 };
-
 
 /**
  * This method returns the object associated to the key
@@ -126,14 +59,9 @@ Config.prototype.has=function(key)
  */
 Config.prototype.get=function(key,def)
 {
-    var self=this;
-    var prop=self.findProp(key);
-
-    if(prop!==undefined && prop
-        !== null)
-        return self.forceToType(prop.type,prop.value);
-    else return def;
+    return this.dataStore.get(key);
 };
+
 
 /**
  * This method sets the provided value to the key.
@@ -142,64 +70,15 @@ Config.prototype.get=function(key,def)
  */
 Config.prototype.set=function(key,value)
 {
-    var self=this;
-    var prop=self.findProp(key);
-
-    if(prop!==undefined && prop !== null)
-    {
-        prop.value=self.forceToType(prop.type,value);
-        self.scheduleSave();
-    }
-    else if(value!==undefined && value!==null)
-    {
-        var type=typeof value;
-        self.addConfigValue(key,type,value);
-    }
-
-    self.callbacks.forEach(function (callback, ckey) {
+    this.dataStore.set(key);
+    this.callbacks.forEach(function (callback, ckey) {
         if(key==ckey)
         {
             callback(value);
         }
     });
-
 };
 
-/**
- * This method schedules saving the internal data to disk. Dump to disk is done if a file path is set.
- */
-Config.prototype.scheduleSave=function()
-{
-    var self=this;
-
-    if(self.filePath!==undefined)
-    {
-        self.saved=false;
-
-        setTimeout(function()
-        {
-            self.save();
-        },self.autosaveDelay);
-    }
-
-};
-
-/**
- * This method saves the data to disk.
- */
-Config.prototype.save=function()
-{
-    var self=this;
-
-    if(self.saved===false)
-    {
-        self.saved=true;
-
-        if(self.syncSave)
-            fs.writeJsonSync(self.filePath,self.data);
-        else fs.writeJson(self.filePath,self.data);
-    }
-};
 
 /**
  * This method add a configuration to the internal data.
@@ -209,138 +88,19 @@ Config.prototype.save=function()
  */
 Config.prototype.addConfigValue=function(key,type,value)
 {
-    var self=this;
-
-    var splitted=key.split('.');
-    var currentProp=self.data;
-
-    while (splitted.length > 0) {
-        var k = splitted.shift();
-
-	var beginArrayIndex=k.indexOf('[');
-        var endArrayIndex=k.indexOf(']');
-
-        if(beginArrayIndex>-1 && endArrayIndex>-1)
-        {
-		throw new Error('Cannot provide index to array');
-	}
-	else
-	{
-		if(currentProp && currentProp[k]!==undefined)
-		    currentProp=currentProp[k];
-		else
-		{
-		    if(type==='array')
-		    {
-			currentProp[k]={type:'array',value:[]};
-			currentProp[k].value.push({type:typeof value,value:value});
-		    }
-		    else
-		    {
-			currentProp[k]={};
-		    	currentProp=currentProp[k];
-		    }
-		    
-		}
-	}
-
-
-	  /*  // shall get an array item
-	    var itemStr=k.substring(0,beginArrayIndex);
-	    var indexStr=parseInt(k.substring(beginArrayIndex+1,endArrayIndex).trim());
-	    currentProp=currentProp[itemStr];
-	
-            if(currentProp && currentProp[itemStr]!==undefined)
-            	currentProp=currentProp[itemStr];
-	    else
-	    {
-	        currentProp[itemStr]={type:'array',value:[]};
-	        currentProp=currentProp[itemStr];
-	    }
-
-	    if(currentProp && currentProp.value && currentProp.value[indexStr]!==undefined)
-            	currentProp=currentProp.value[indexStr];
-	    else
-	    {
-		if(!currentProp.value)
-   			currentProp.value=[];
-                 
-                if(!currentProp.value[indexStr])
-		{
-		  var newItem={type:typeof value,value:value};
-                  currentProp.value.push(newItem);
-	          currentProp=newItem;
-		}
-		else currentProp=currentProp.value[indexStr];
-	        
-	    }
-    	}
-        else
-	{
-	}*/
-
-	
-    }
-
-    var prop=self.findProp(key);
-    self.assertSupportedType(type);
-    prop.type=type;
-
-    prop.value=self.forceToType(type,value);
-
-    self.scheduleSave();
+   return this.dataStore.addConfigValue(key,type,value);
 };
 
-/**
- * This method checks if the type passed as parameter is supported by the library
- * @param type type to check
- */
-Config.prototype.assertSupportedType=function(type)
-{
-    if(type != 'string' && type!='boolean' && type!='number' && type!='array')
-    {
-        throw Error('Type '+type+' is not supported');
-    }
-};
 
-/**
- * This method forces the value passed
- * @param key type to force value to
- * @param value The value to be forced
- */
-Config.prototype.forceToType=function(type,value)
-{
-    if(type=='string')
-    {
-        return ''+value;
-    }
-    else if(type=='boolean')
-    {
-        return Boolean(value);
-    }
-    else if(type=='number')
-    {
-        var i = Number(value);
-        if(Number.isNaN(i))
-            throw  Error('The value '+value+' is not a number');
-        else return i;
-    }
-    else if(type=='array')
-    {
-    	return [{type:typeof value,value:value}];
-    }
-    else return value;
 
-};
+
 
 /**
  * This method prints the internal data to console
  */
 Config.prototype.print=function()
 {
-    var self=this;
-
-    console.log(JSON.stringify(self.data));
+    console.log(JSON.stringify(this.dataStore.data));
 };
 
 /**
@@ -349,31 +109,8 @@ Config.prototype.print=function()
  */
 Config.prototype.delete=function(key)
 {
-    var self=this;
-
-    if(self.has(key))
-    {
-        var splitted=key.split('.');
-
-        if(splitted.length==1)
-            delete self.data[key];
-        else
-        {
-            var parentKey=self.data;
-            for(var i=0;i< splitted.length;i++)
-            {
-                var k = splitted.shift();
-                parentKey=parentKey[k];
-            }
-
-            var nextKey=splitted.shift();
-            delete parentKey[nextKey];
-        }
-
-        self.scheduleSave();
-    }
-
-    self.callbacks.delete(key);
+    this.dataStore.delete(key);
+    this.callbacks.delete(key);
 };
 
 /**
@@ -382,13 +119,7 @@ Config.prototype.delete=function(key)
  */
 Config.prototype.getKeys=function(parentKey)
 {
-    var self=this;
-
-    var parent=self.findProp(parentKey);
-
-    if(parent!==undefined && parent!==null)
-        return Object.keys(parent);
-    else return Object.keys(self.data);
+    return this.dataStore.getKeys(parentKey);
 };
 
 /**
@@ -398,7 +129,5 @@ Config.prototype.getKeys=function(parentKey)
  */
 Config.prototype.registerCallback=function(key,callback)
 {
-    var self=this;
-
-    self.callbacks.set(key,callback);
+    this.callbacks.set(key,callback);
 };
