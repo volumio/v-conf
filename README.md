@@ -95,7 +95,7 @@ creates an internal representation like the following
         
 ###Data types
 
-Supported types are: boolean, string, number
+Supported types are: boolean, string, number, array
 
 ###Methods
 
@@ -103,24 +103,27 @@ Supported types are: boolean, string, number
 
 Adds a configuration key to the structure.
 
-* key:   the key for the configuration values you're about to add
+* key:   the key for the configuration values you're about to add. If key  is an array don't provide any index, item is added at the end of the array
 * type:  one of the supported data types
 * value: the current value
 
 Example:
 
     config.addConfigValue('groupa.configuration','boolean',false);
+or
+    config.addConfigValue('groupa.configuration','array',false);
 
 ####set(key,value)
 
 Updates the value of the key. If the key doesn't exists, the method creates it inferring the value type.
 
-* key:   the key of an existing configuration values
+* key:   the key of an existing configuration values. If item is an array, provide the index.
 * value: the value to set
 
 Example:
 
     config.set('groupa.configuration',false);
+    config.set('groupa.configuration.items[1]','my string');
     
 ####get(key)
 

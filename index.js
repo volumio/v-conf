@@ -11,6 +11,7 @@ function Config()
 {
     var self=this;
 
+    self.syncSave=true;
     self.autosave=true;
     self.autosaveDelay=1000;
     self.saved=true;
@@ -22,10 +23,11 @@ function Config()
 
 /**
  * This method loads the configuration from a file. If the file is not found or cannot be opened for some reason,
- * the content is set to empty
+ * the content is set to empty. The method is synchronous if no callback is provided, asynchronous otherwise
  * @param file The path of the configuration file to load.
+ * @param callback Callback method that is invoked when load is completed. Function shall accept (err,data)
  */
-Config.prototype.loadFile=function(file)
+Config.prototype.loadFile=function(file,callback)
 {
     var self=this;
 
@@ -33,7 +35,20 @@ Config.prototype.loadFile=function(file)
 
     try
     {
-        self.data=fs.readJsonSync(file);
+        if(callback === undefined)
+            self.data=fs.readJsonSync(file);
+        else
+        {
+            fs.readJson(file,function(err,data){
+                if(err)
+                    callback(err);
+                else
+                {
+                    self.data=data;
+                    callback(err,data);
+                }
+            });
+        }
     }
     catch(ex)
     {
@@ -62,12 +77,26 @@ Config.prototype.findProp=function(key)
         while (splitItems.length > 0) {
             var k = splitItems.shift();
 
-            if(currentProp && currentProp[k]!==undefined)
-                currentProp=currentProp[k];
+            var beginArrayIndex=k.indexOf('[');
+            var endArrayIndex=k.indexOf(']');
+
+            if(beginArrayIndex>-1 && endArrayIndex>-1)
+            {
+                // shall get an array item
+		var itemStr=k.substring(0,beginArrayIndex);
+		var indexStr=parseInt(k.substring(beginArrayIndex+1,endArrayIndex).trim());
+		currentProp=currentProp[itemStr];
+		currentProp=currentProp.value[indexStr];
+            }
             else
             {
-                currentProp=null;
-                break;
+                if(currentProp && currentProp[k]!==undefined)
+                    currentProp=currentProp[k];
+                else
+                {
+                    currentProp=null;
+                    break;
+                }
             }
         }
 
@@ -83,8 +112,9 @@ Config.prototype.findProp=function(key)
 Config.prototype.has=function(key)
 {
     var self=this;
+    var prop=self.findProp(key);
 
-    return self.findProp(key)!==null;
+    return prop!==null && prop!==undefined;
 };
 
 
@@ -164,7 +194,10 @@ Config.prototype.save=function()
     if(self.saved===false)
     {
         self.saved=true;
-        fs.writeJsonSync(self.filePath,self.data);
+
+        if(self.syncSave)
+            fs.writeJsonSync(self.filePath,self.data);
+        else fs.writeJson(self.filePath,self.data);
     }
 };
 
@@ -184,19 +217,74 @@ Config.prototype.addConfigValue=function(key,type,value)
     while (splitted.length > 0) {
         var k = splitted.shift();
 
-        if(currentProp && currentProp[k]!==undefined)
-            currentProp=currentProp[k];
-        else
+	var beginArrayIndex=k.indexOf('[');
+        var endArrayIndex=k.indexOf(']');
+
+        if(beginArrayIndex>-1 && endArrayIndex>-1)
         {
-            currentProp[k]={};
-            currentProp=currentProp[k];
-        }
+		throw new Error('Cannot provide index to array');
+	}
+	else
+	{
+		if(currentProp && currentProp[k]!==undefined)
+		    currentProp=currentProp[k];
+		else
+		{
+		    if(type==='array')
+		    {
+			currentProp[k]={type:'array',value:[]};
+			currentProp[k].value.push({type:typeof value,value:value});
+		    }
+		    else
+		    {
+			currentProp[k]={};
+		    	currentProp=currentProp[k];
+		    }
+		    
+		}
+	}
+
+
+	  /*  // shall get an array item
+	    var itemStr=k.substring(0,beginArrayIndex);
+	    var indexStr=parseInt(k.substring(beginArrayIndex+1,endArrayIndex).trim());
+	    currentProp=currentProp[itemStr];
+	
+            if(currentProp && currentProp[itemStr]!==undefined)
+            	currentProp=currentProp[itemStr];
+	    else
+	    {
+	        currentProp[itemStr]={type:'array',value:[]};
+	        currentProp=currentProp[itemStr];
+	    }
+
+	    if(currentProp && currentProp.value && currentProp.value[indexStr]!==undefined)
+            	currentProp=currentProp.value[indexStr];
+	    else
+	    {
+		if(!currentProp.value)
+   			currentProp.value=[];
+                 
+                if(!currentProp.value[indexStr])
+		{
+		  var newItem={type:typeof value,value:value};
+                  currentProp.value.push(newItem);
+	          currentProp=newItem;
+		}
+		else currentProp=currentProp.value[indexStr];
+	        
+	    }
+    	}
+        else
+	{
+	}*/
+
+	
     }
 
     var prop=self.findProp(key);
     self.assertSupportedType(type);
     prop.type=type;
-
 
     prop.value=self.forceToType(type,value);
 
@@ -236,6 +324,10 @@ Config.prototype.forceToType=function(type,value)
         if(Number.isNaN(i))
             throw  Error('The value '+value+' is not a number');
         else return i;
+    }
+    else if(type=='array')
+    {
+    	return [{type:typeof value,value:value}];
     }
     else return value;
 
