@@ -91,6 +91,18 @@ describe("#findProp()", function() {
                 }
             ]
         });
+
+	array=vconf.findProp('load.array[ 1]');
+
+        expect(array).to.deep.equal(
+                {
+                    type: "boolean",
+                    value: true
+                });
+
+	array=vconf.findProp('load.array[ 3 ]');
+
+        expect(array).to.equal( undefined );
     });
 
 });
@@ -115,6 +127,23 @@ describe("#has()", function() {
 
         expect(a).to.equal(true);
         expect(d).to.equal(false);
+    });
+
+    it("Method correctly returns if item is present in an array", function(){
+        var vconf=new (require(__dirname+'/../index.js'))();
+
+        vconf.loadFile('/tmp/has.json');
+        var a=vconf.has('load.a');
+        var d=vconf.has('load.d');
+	var array=vconf.has('load.array');
+	var arrayItemExists=vconf.has('load.array[0 ]');
+	var arrayItemDoesNotExist=vconf.has('load.array[5 ]');
+
+        expect(a).to.equal(true);
+        expect(d).to.equal(false);
+	expect(array).to.equal(true);
+	expect(arrayItemExists).to.equal(true);
+	expect(arrayItemDoesNotExist).to.equal(false);
     });
 
 
@@ -166,6 +195,33 @@ describe("#get()", function() {
         expect(a).to.deep.equal( 100 );
     });
 
+    it("Array item found", function(){
+        var vconf=new (require(__dirname+'/../index.js'))();
+
+        vconf.loadFile('/tmp/get.json');
+        var a=vconf.get('load.array[0]',true);
+
+        expect(a).to.equal( false );
+    });
+
+    it("Array item not found (no default)", function(){
+        var vconf=new (require(__dirname+'/../index.js'))();
+
+        vconf.loadFile('/tmp/get.json');
+        var a=vconf.get('load.array[2]');
+
+        expect(a).to.equal( undefined );
+    });
+
+    it("Array item not found (default provided)", function(){
+        var vconf=new (require(__dirname+'/../index.js'))();
+
+        vconf.loadFile('/tmp/get.json');
+        var a=vconf.get('load.array[2]',true);
+
+        expect(a).to.equal( true );
+    });
+
 });
 
 /**
@@ -185,17 +241,17 @@ describe("#set()", function() {
 	var a=vconf.get('load.a');
         var b=vconf.get('load.b');
         var c=vconf.get('load.c');
-
+	
 	expect(a).to.equal( 100 );
 
         expect(b).to.equal( "A String" );
 
         expect(c).to.equal( false );
-
+	
         vconf.set('load.a',50);
         vconf.set('load.b',"Updated string");
         vconf.set('load.c',true);
-
+	
         expect(vconf.data.load.a).to.deep.equal( {
             type: "number",
             value: 50
@@ -212,13 +268,32 @@ describe("#set()", function() {
         } );
     });
 
+    it("Setting array values", function(){
+        var vconf=new (require(__dirname+'/../index.js'))();
+	vconf.loadFile('/tmp/set.json');
+
+	var arrayItem=vconf.get('load.array[0]');
+
+	expect(arrayItem).to.equal( false );
+
+        vconf.set('load.array[ 0 ]',true);
+
+        expect(vconf.data.load.array.value[0]).to.deep.equal( {
+            type: "boolean",
+            value: true
+        } );
+    });
+
+
+
     it("Adding keys", function(){
         var vconf=new (require(__dirname+'/../index.js'))();
 
-	    var d=vconf.get('load.d');
+	var d=vconf.get('load.d');
         var e=vconf.set('load.e');
         var f=vconf.set('load.f');
-	    expect(d).to.equal( undefined );
+
+	expect(d).to.equal( undefined );
 
         expect(e).to.equal( undefined );
 
@@ -228,6 +303,9 @@ describe("#set()", function() {
         vconf.set('load.d',100);
         vconf.set('load.e',"A value");
         vconf.set('load.f',true);
+
+	vconf.addConfigValue('load.array','array','New item in array');
+	vconf.set('load.array[0]','Added');
 
         expect(vconf.data.load.d).to.deep.equal( {
             type: "number",
@@ -244,6 +322,8 @@ describe("#set()", function() {
             value: true
         } );
     });
+
+
     
 
 });
@@ -266,6 +346,7 @@ describe("#addConfigValue()", function() {
         vconf.addConfigValue('load.d','string', "Another string" );
         vconf.addConfigValue('load.e','number', 500 );
         vconf.addConfigValue('load.f','boolean', true );
+	vconf.addConfigValue('load.array','array','New item in array');
 
         expect(vconf.data.load.a).to.deep.equal( {
             type: "number",
@@ -295,6 +376,11 @@ describe("#addConfigValue()", function() {
         expect(vconf.data.load.f).to.deep.equal( {
             type: "boolean",
             value: true
+        } );
+
+	expect(vconf.data.load.array).to.deep.equal( {
+            type: "array",
+            value: [{type:'string',value:'New item in array'}]
         } );
     });
 

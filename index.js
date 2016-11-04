@@ -83,6 +83,10 @@ Config.prototype.findProp=function(key)
             if(beginArrayIndex>-1 && endArrayIndex>-1)
             {
                 // shall get an array item
+		var itemStr=k.substring(0,beginArrayIndex);
+		var indexStr=parseInt(k.substring(beginArrayIndex+1,endArrayIndex).trim());
+		currentProp=currentProp[itemStr];
+		currentProp=currentProp.value[indexStr];
             }
             else
             {
@@ -108,8 +112,9 @@ Config.prototype.findProp=function(key)
 Config.prototype.has=function(key)
 {
     var self=this;
+    var prop=self.findProp(key);
 
-    return self.findProp(key)!==null;
+    return prop!==null && prop!==undefined;
 };
 
 
@@ -212,19 +217,74 @@ Config.prototype.addConfigValue=function(key,type,value)
     while (splitted.length > 0) {
         var k = splitted.shift();
 
-        if(currentProp && currentProp[k]!==undefined)
-            currentProp=currentProp[k];
-        else
+	var beginArrayIndex=k.indexOf('[');
+        var endArrayIndex=k.indexOf(']');
+
+        if(beginArrayIndex>-1 && endArrayIndex>-1)
         {
-            currentProp[k]={};
-            currentProp=currentProp[k];
-        }
+		throw new Error('Cannot provide index to array');
+	}
+	else
+	{
+		if(currentProp && currentProp[k]!==undefined)
+		    currentProp=currentProp[k];
+		else
+		{
+		    if(type==='array')
+		    {
+			currentProp[k]={type:'array',value:[]};
+			currentProp[k].value.push({type:typeof value,value:value});
+		    }
+		    else
+		    {
+			currentProp[k]={};
+		    	currentProp=currentProp[k];
+		    }
+		    
+		}
+	}
+
+
+	  /*  // shall get an array item
+	    var itemStr=k.substring(0,beginArrayIndex);
+	    var indexStr=parseInt(k.substring(beginArrayIndex+1,endArrayIndex).trim());
+	    currentProp=currentProp[itemStr];
+	
+            if(currentProp && currentProp[itemStr]!==undefined)
+            	currentProp=currentProp[itemStr];
+	    else
+	    {
+	        currentProp[itemStr]={type:'array',value:[]};
+	        currentProp=currentProp[itemStr];
+	    }
+
+	    if(currentProp && currentProp.value && currentProp.value[indexStr]!==undefined)
+            	currentProp=currentProp.value[indexStr];
+	    else
+	    {
+		if(!currentProp.value)
+   			currentProp.value=[];
+                 
+                if(!currentProp.value[indexStr])
+		{
+		  var newItem={type:typeof value,value:value};
+                  currentProp.value.push(newItem);
+	          currentProp=newItem;
+		}
+		else currentProp=currentProp.value[indexStr];
+	        
+	    }
+    	}
+        else
+	{
+	}*/
+
+	
     }
 
     var prop=self.findProp(key);
     self.assertSupportedType(type);
     prop.type=type;
-
 
     prop.value=self.forceToType(type,value);
 
@@ -264,6 +324,10 @@ Config.prototype.forceToType=function(type,value)
         if(Number.isNaN(i))
             throw  Error('The value '+value+' is not a number');
         else return i;
+    }
+    else if(type=='array')
+    {
+    	return [{type:typeof value,value:value}];
     }
     else return value;
 
