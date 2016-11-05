@@ -217,76 +217,46 @@ Config.prototype.addConfigValue=function(key,type,value)
     while (splitted.length > 0) {
         var k = splitted.shift();
 
-	var beginArrayIndex=k.indexOf('[');
+	    var beginArrayIndex=k.indexOf('[');
         var endArrayIndex=k.indexOf(']');
 
         if(beginArrayIndex>-1 && endArrayIndex>-1)
         {
-		throw new Error('Cannot provide index to array');
-	}
-	else
-	{
-		if(currentProp && currentProp[k]!==undefined)
-		    currentProp=currentProp[k];
-		else
-		{
-		    if(type==='array')
-		    {
-			currentProp[k]={type:'array',value:[]};
-			currentProp[k].value.push({type:typeof value,value:value});
-		    }
+		    throw new Error('Cannot provide index to array');
+	    }
+	    else
+	    {
+		    if(currentProp && currentProp[k]!==undefined)
+		        currentProp=currentProp[k];
 		    else
 		    {
-			currentProp[k]={};
-		    	currentProp=currentProp[k];
+		        if(type==='array')
+		        {
+			        currentProp[k]={type:'array',value:[]};
+		        }
+		        else
+		        {
+			        currentProp[k]={};
+		    	    currentProp=currentProp[k];
+		        }
 		    }
-		    
-		}
-	}
-
-
-	  /*  // shall get an array item
-	    var itemStr=k.substring(0,beginArrayIndex);
-	    var indexStr=parseInt(k.substring(beginArrayIndex+1,endArrayIndex).trim());
-	    currentProp=currentProp[itemStr];
-	
-            if(currentProp && currentProp[itemStr]!==undefined)
-            	currentProp=currentProp[itemStr];
-	    else
-	    {
-	        currentProp[itemStr]={type:'array',value:[]};
-	        currentProp=currentProp[itemStr];
 	    }
 
-	    if(currentProp && currentProp.value && currentProp.value[indexStr]!==undefined)
-            	currentProp=currentProp.value[indexStr];
-	    else
-	    {
-		if(!currentProp.value)
-   			currentProp.value=[];
-                 
-                if(!currentProp.value[indexStr])
-		{
-		  var newItem={type:typeof value,value:value};
-                  currentProp.value.push(newItem);
-	          currentProp=newItem;
-		}
-		else currentProp=currentProp.value[indexStr];
-	        
-	    }
-    	}
-        else
-	{
-	}*/
-
-	
     }
 
     var prop=self.findProp(key);
     self.assertSupportedType(type);
-    prop.type=type;
 
-    prop.value=self.forceToType(type,value);
+    if(type==='array')
+    {
+        prop.value.push({type:typeof value,value:value});
+    }
+    else
+    {
+        prop.type=type;
+        prop.value=self.forceToType(type,value);
+    }
+
 
     self.scheduleSave();
 };
