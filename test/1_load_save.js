@@ -213,3 +213,115 @@ describe("#save()", function() {
 	
     });
 });
+
+
+describe("#atomicsave()", function() {
+        beforeEach(function() {
+            fs.writeJsonSync("/tmp/save.json",{});
+            var fileExists=fs.existsSync("/tmp/save.json");
+            expect(fileExists).to.equal( true );
+        });
+
+
+        it("Data is saved to disk (SYNC)", function(){
+            var vconf=new (require(__dirname+'/../index.js'))();
+            vconf.filePath="/tmp/save.json";
+            vconf.saved=false;
+            vconf.syncSave=true;
+            vconf.atomicSave=true;
+
+            var obj = fs.readJsonSync("/tmp/save.json");
+
+            expect(vconf.saved).to.equal( false );
+            expect(vconf.filePath).to.equal( "/tmp/save.json" );
+            expect(obj).to.deep.equal( {} );
+
+            vconf.data={
+                    load: {
+                    a: {
+                        type: "number",
+                        value: 100
+                    }
+                    }
+            };
+            vconf.save();
+        
+            obj = fs.readJsonSync("/tmp/save.json");
+
+            expect(obj).to.deep.equal( {
+                    load: {
+                    a: {
+                        type: "number",
+                        value: 100
+                    }
+                    } });
+        
+        });
+
+        it("Data is saved to disk (ASYNC)", function(done){
+            this.timeout(7000);
+            var vconf=new (require(__dirname+'/../index.js'))();
+            vconf.filePath="/tmp/save.json";
+            vconf.saved=false;
+            vconf.syncSave=false;
+            vconf.atomicSave=true;
+
+            var obj = fs.readJsonSync("/tmp/save.json");
+
+            expect(vconf.saved).to.equal( false );
+            expect(vconf.filePath).to.equal( "/tmp/save.json" );
+            expect(obj).to.deep.equal( {} );
+
+            vconf.data={
+                    load: {
+                    a: {
+                        type: "number",
+                        value: 100
+                    }
+                    }
+            };
+            vconf.save();
+        
+            setTimeout(function(){
+                obj = fs.readJsonSync("/tmp/save.json");
+
+                expect(obj).to.deep.equal( {
+                        load: {
+                        a: {
+                            type: "number",
+                            value: 100
+                        }
+                        } });
+                done();
+            },1000);
+        
+        });
+
+        it("Data is not saved to disk", function(){
+            var vconf=new (require(__dirname+'/../index.js'))();
+            vconf.filePath="/tmp/save.json";
+            vconf.saved=true;
+            vconf.atomicSave=true;
+
+            var obj = fs.readJsonSync("/tmp/save.json");
+
+            expect(vconf.saved).to.equal( true );
+            expect(vconf.filePath).to.equal( "/tmp/save.json" );
+            expect(obj).to.deep.equal( {} );
+
+            vconf.data={
+                    load: {
+                    a: {
+                        type: "number",
+                        value: 100
+                    }
+                    }
+            };
+            vconf.save();
+            
+            obj = fs.readJsonSync("/tmp/save.json");
+
+            expect(obj).to.deep.equal( {});
+        
+        });
+});

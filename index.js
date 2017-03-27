@@ -4,6 +4,8 @@
  */
 var fs=require('fs-extra');
 var Multimap = require('multimap');
+var atomicwrite = require('write-file-atomic');
+var atomicwritesync = require('write-file-atomic').sync;
 
 module.exports=Config;
 
@@ -15,6 +17,7 @@ function Config()
     self.autosave=true;
     self.autosaveDelay=1000;
     self.saved=true;
+    self.atomicSave=false;
     self.data={};
 
     self.callbacks=new Multimap();
@@ -196,8 +199,29 @@ Config.prototype.save=function()
         self.saved=true;
 
         if(self.syncSave)
-            fs.writeJsonSync(self.filePath,self.data);
-        else fs.writeJson(self.filePath,self.data);
+	    {
+    		if(self.atomicSave)
+    		{
+               atomicwritesync(self.filePath, JSON.stringify(self.data));
+    		}
+    		else
+    		{
+    			fs.writeJsonSync(self.filePath,self.data);
+    		}    
+	    }
+        else 
+            {
+                if(self.atomicSave)
+                {
+                   atomicwrite(self.filePath, JSON.stringify(self.data),{},function(err){ 
+                        if(err)console.log("Atomic write error: "+err);
+                    });
+                }
+                else
+                {
+                    fs.writeJson(self.filePath,self.data);
+                }
+            }
     }
 };
 
