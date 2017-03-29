@@ -325,3 +325,12 @@ describe("#atomicsave()", function() {
         
         });
 });
+
+describe("#testError()", function() {
+        
+        it("Raise error in Mocha", function(){
+            var obj={error:true};
+
+            expect(obj.error).to.equal( false );
+        });
+    });
