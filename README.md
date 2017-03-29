@@ -1,4 +1,4 @@
-[![bitHound Overall Score](https://www.bithound.io/github/fanciulli/v-conf/badges/score.svg)](https://www.bithound.io/github/fanciulli/v-conf)  [![bitHound Dependencies](https://www.bithound.io/github/fanciulli/v-conf/badges/dependencies.svg)](https://www.bithound.io/github/fanciulli/v-conf/master/dependencies/npm)[![TravisCI](https://travis-ci.org/fanciulli/v-conf.svg?branch=master)](https://travis-ci.org/fanciulli/v-conf.svg?branch=master)
+[![bitHound Overall Score](https://www.bithound.io/github/fanciulli/v-conf/badges/score.svg)](https://www.bithound.io/github/fanciulli/v-conf)  [![bitHound Dependencies](https://www.bithound.io/github/fanciulli/v-conf/badges/dependencies.svg)](https://www.bithound.io/github/fanciulli/v-conf/master/dependencies/npm)  [![TravisCI](https://travis-ci.org/fanciulli/v-conf.svg?branch=master)](https://travis-ci.org/fanciulli/v-conf.svg?branch=master)
 
 # v-conf
 An easy to use library for managing configuration parameters. V-conf was born inside the [Volumio](http://volumio.org 'The volumio project website') project
