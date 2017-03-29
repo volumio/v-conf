@@ -13,11 +13,11 @@ The idea behind v-conf is to provide an easy way to manage configuration paramet
 * Callbacks can be associated to configuration keys.
 
 
-##Contacts
+## Contacts
 
-<a href="https://twitter.com/fanciullim" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @fanciullim</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<a href="https://twitter.com/fanciullim" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @fanciullim</a>
 
-##Installation
+## Installation
 
 To install it include the library in your package.json as follows (replacing VERSION with latest version number)
 
@@ -43,9 +43,9 @@ or install v-conf globally
 
     npm install -g v-conf
     
-##Usage
+## Usage
 
-###Initialization
+### Initialization
 
 V-conf needs to be instantiated somewhere in your code. 
 
@@ -64,7 +64,7 @@ If you load the configuration from file you automatically activate the autosave 
 a configured amount of time. This allows grouping write option thus saving your SD card (in case you run the code on a device like a
 Raspberry PI)
 
-###Key structure
+### Key structure
 
 As shown by the addConfigValue example above the configuration values are organized in a tree structure. This allows grouping of data.
 The method addConfigValue automatically creates the missing structures for you.
@@ -93,13 +93,13 @@ creates an internal representation like the following
                 }
         }
         
-###Data types
+### Data types
 
 Supported types are: boolean, string, number, array
 
-###Methods
+### Methods
 
-####addConfigValue(key,type,value)
+#### addConfigValue(key,type,value)
 
 Adds a configuration key to the structure.
 
@@ -113,7 +113,7 @@ Example:
 or
     config.addConfigValue('groupa.configuration','array',false);
 
-####set(key,value)
+#### set(key,value)
 
 Updates the value of the key. If the key doesn't exists, the method creates it inferring the value type.
 
@@ -125,7 +125,7 @@ Example:
     config.set('groupa.configuration',false);
     config.set('groupa.configuration.items[1]','my string');
     
-####get(key)
+#### get(key)
 
 Retrieves the current value for the specified key.
 
@@ -137,7 +137,7 @@ Example:
 
     var values=config.get('groupa.configuration');
     
-####delete(key)
+#### delete(key)
 
 Deletes the configuration parameter specified by the key.
 
@@ -147,7 +147,7 @@ Example:
 
     config.delete('groupa.configuration');
     
-####has(key)
+#### has(key)
 
 This method checks the existence of a key
 
@@ -159,7 +159,7 @@ Example:
 
     var exists=config.has('groupa.configuration');    
     
-####getKeys(key)
+#### getKeys(key)
 
 Lists all the children keys of the specified one.
 
@@ -169,7 +169,7 @@ Example:
 
     var keys=config.getKeys('groupa.configuration');
     
-####registerCallback(key, callback)
+#### registerCallback(key, callback)
 
 Register a callback function to be executed when the value is updated
 
