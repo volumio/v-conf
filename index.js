@@ -193,8 +193,8 @@ Config.prototype.scheduleSave=function()
 Config.prototype.save=function()
 {
     var self=this;
-
-    if(self.saved===false)
+	try{
+		 if(self.saved===false)
     {
         self.saved=true;
 
@@ -223,6 +223,9 @@ Config.prototype.save=function()
                 }
             }
     }
+	} catch(e) {
+		console.log("Configuration write error: "+err);
+	}
 };
 
 /**
