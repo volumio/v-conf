@@ -224,7 +224,7 @@ Config.prototype.save=function()
             }
     }
 	} catch(e) {
-		console.log("Configuration write error: "+err);
+		console.log("Configuration write error: "+e);
 	}
 };
 
