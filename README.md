@@ -136,19 +136,6 @@ Returns the value associated to the key or undefined
 Example:
 
     var values=config.get('groupa.configuration');
-
-#### get(key,def)
-
-Retrieves the current value for the specified key.
-
-* key:   the key of the request configuration value. It can be absent.
-* def:   the value returned, if the the key is absent.
-
-Return the value associated to the key or the default value.
-
-Example:
-
-    var values=config.get('groupa.configuration','my default');
     
 #### delete(key)
 
