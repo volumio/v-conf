@@ -1,6 +1,7 @@
 /**
  * Created by Massimiliano Fanciulli on 27/07/15.
  * If you need any information write me at fanciulli@gmail.com
+ * Copyright - Volumio SRL 2021
  */
 var fs=require('fs-extra');
 var Multimap = require('multimap');
@@ -207,13 +208,13 @@ Config.prototype.save=function()
     		else
     		{
     			fs.writeJsonSync(self.filePath,self.data);
-    		}    
+    		}
 	    }
-        else 
+        else
             {
                 if(self.atomicSave)
                 {
-                   atomicwrite(self.filePath, JSON.stringify(self.data),{},function(err){ 
+                   atomicwrite(self.filePath, JSON.stringify(self.data),{},function(err){
                         if(err)console.log("Atomic write error: "+err);
                     });
                 }

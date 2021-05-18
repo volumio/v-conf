@@ -1,8 +1,7 @@
-[![bitHound Overall Score](https://www.bithound.io/github/fanciulli/v-conf/badges/score.svg)](https://www.bithound.io/github/fanciulli/v-conf)  [![bitHound Dependencies](https://www.bithound.io/github/fanciulli/v-conf/badges/dependencies.svg)](https://www.bithound.io/github/fanciulli/v-conf/master/dependencies/npm)  [![TravisCI](https://travis-ci.org/fanciulli/v-conf.svg?branch=master)](https://travis-ci.org/fanciulli/v-conf.svg?branch=master)
+[![bitHound Overall Score](https://www.bithound.io/github/volumio/v-conf/badges/score.svg)](https://www.bithound.io/github/volumio/v-conf)  [![bitHound Dependencies](https://www.bithound.io/github/volumio/v-conf/badges/dependencies.svg)](https://www.bithound.io/github/volumio/v-conf/master/dependencies/npm)  [![TravisCI](https://travis-ci.org/volumio/v-conf.svg?branch=master)](https://travis-ci.org/volumio/v-conf.svg?branch=master)
 
 # v-conf
-An easy to use library for managing configuration parameters. V-conf was born inside the [Volumio](http://volumio.org 'The volumio project website') project
-and then has been migrated to a separate library. 
+An easy to use library for managing configuration parameters. V-conf was born inside the [Volumio](http://volumio.org 'The volumio project website') project and then has been migrated to a separate library.
 
 The idea behind v-conf is to provide an easy way to manage configuration parameters. Main functionalities are:
 
@@ -11,11 +10,6 @@ The idea behind v-conf is to provide an easy way to manage configuration paramet
 * Data is automatically saved after a configurable amount of time
 * Data write is reduced by delaying disk writes
 * Callbacks can be associated to configuration keys.
-
-
-## Contacts
-
-<a href="https://twitter.com/fanciullim" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @fanciullim</a>
 
 ## Installation
 
@@ -29,37 +23,37 @@ To install it include the library in your package.json as follows (replacing VER
         }
     }
 
-and then run 
+and then run
 
     npm install
-    
+
 In your package.json pick latest version if you don't need a specific one.
 
 If you want to install the library manually run the following command on the root of your project
 
     npm install v-conf
-   
+
 or install v-conf globally
 
     npm install -g v-conf
-    
+
 ## Usage
 
 ### Initialization
 
-V-conf needs to be instantiated somewhere in your code. 
+V-conf needs to be instantiated somewhere in your code.
 
     var config=new (require('v-conf'))();
-    
-Then you can decide whether creating your data structure manually or load it from disk. 
+
+Then you can decide whether creating your data structure manually or load it from disk.
 A configuration value can be added as follows:
 
     config.addConfigValue('my.configuration.value','boolean',false);
-    
+
 Instead a configuration file can be loaded by executing
- 
+
     config.loadFile(__dirname+'/testConfig.json');
-    
+
 If you load the configuration from file you automatically activate the autosave option. This option saves the updated configuration after
 a configured amount of time. This allows grouping write option thus saving your SD card (in case you run the code on a device like a
 Raspberry PI)
@@ -73,7 +67,7 @@ The following code
 
      config.addConfigValue('groupa.configuration','boolean',false);
      config.addConfigValue('groupb.configuration','boolean',true);
-     
+
 creates an internal representation like the following
 
     {
@@ -92,7 +86,7 @@ creates an internal representation like the following
                                      }
                 }
         }
-        
+
 ### Data types
 
 Supported types are: boolean, string, number, array
@@ -124,7 +118,7 @@ Example:
 
     config.set('groupa.configuration',false);
     config.set('groupa.configuration.items[1]','my string');
-    
+
 #### get(key)
 
 Retrieves the current value for the specified key.
@@ -136,7 +130,7 @@ Returns the value associated to the key or undefined
 Example:
 
     var values=config.get('groupa.configuration');
-    
+
 #### delete(key)
 
 Deletes the configuration parameter specified by the key.
@@ -146,7 +140,7 @@ Deletes the configuration parameter specified by the key.
 Example:
 
     config.delete('groupa.configuration');
-    
+
 #### has(key)
 
 This method checks the existence of a key
@@ -158,7 +152,7 @@ Returns eturns true or false depending on the existence of a key in the configur
 Example:
 
     var exists=config.has('groupa.configuration');    
-    
+
 #### getKeys(key)
 
 Lists all the children keys of the specified one.
@@ -168,14 +162,14 @@ Lists all the children keys of the specified one.
 Example:
 
     var keys=config.getKeys('groupa.configuration');
-    
+
 #### registerCallback(key, callback)
 
 Register a callback function to be executed when the value is updated
 
 * key:   the key of an existing configuration values that you want to be notified of its value change
 * callback: a callback function that will be invoked when the value is updated. The new value is passed to the function.
-            
+
 
 Example:
 
