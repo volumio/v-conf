@@ -16,7 +16,7 @@
     "conf"
   ],
   "author": "Massimiliano Fanciulli",
-  "license": "ISC",
+  "license": "GPLV3",
   "bugs": {
     "url": "https://github.com/volumio/v-conf/issues"
   },
